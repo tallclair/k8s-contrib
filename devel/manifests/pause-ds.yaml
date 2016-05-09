@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: pause
+spec:
+  template:
+    metadata:
+      labels:
+        app: pause
+    spec:
+      containers:
+        - name:    pause
+          image: gcr.io/google_containers/pause

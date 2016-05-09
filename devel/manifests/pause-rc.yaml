@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name:   pause
+spec:
+  replicas: 50
+  selector:
+    app: pause
+  template:
+    metadata:
+      labels:
+        app: pause
+    spec:
+      containers:
+        - name:    pause
+          image: gcr.io/google_containers/pause
+          resources:
+            requests:
+              memory: "1k"
+              cpu: "1m"
