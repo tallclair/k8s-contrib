@@ -1,0 +1,77 @@
+{
+  "kind": "Pod",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "cadvisor"
+  },
+  "spec": {
+    "volumes": [
+      {
+        "name": "rootfs",
+        "hostPath": {
+          "path": "\/"
+        }
+      },
+      {
+        "name": "var-run",
+        "hostPath": {
+          "path": "\/var\/run"
+        }
+      },
+      {
+        "name": "sys",
+        "hostPath": {
+          "path": "\/sys"
+        }
+      },
+      {
+        "name": "docker",
+        "hostPath": {
+          "path": "\/var\/lib\/docker"
+        }
+      }
+    ],
+    "containers": [
+      {
+        "name": "cadvisor",
+        "image": "google\/cadvisor:latest",
+        "args": [
+          "--profiling",
+          "--housekeeping_interval=1s"
+        ],
+        "ports": [
+          {
+            "name": "http",
+            "containerPort": 8080,
+            "protocol": "TCP"
+          }
+        ],
+        "resources": {
+          "requests": {
+            "cpu": "100m"
+          }
+        },
+        "volumeMounts": [
+          {
+            "name": "rootfs",
+            "mountPath": "\/rootfs"
+          },
+          {
+            "name": "var-run",
+            "mountPath": "\/var\/run"
+          },
+          {
+            "name": "sys",
+            "readOnly": true,
+            "mountPath": "\/sys"
+          },
+          {
+            "name": "docker",
+            "readOnly": true,
+            "mountPath": "\/var\/lib\/docker"
+          }
+        ]
+      }
+    ]
+  }
+}

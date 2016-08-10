@@ -46,8 +46,6 @@ fi
 if [[ -d "$TESTDIR" ]]; then
   echo "deleting $TESTDIR ..."
   rm -rf "$TESTDIR"
-else
-  echo "NOT deleting $TESTDIR"
 fi
 
 # Create new godep test directory
