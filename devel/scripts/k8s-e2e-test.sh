@@ -24,7 +24,7 @@ DIRTAG="${2}"
 SUITES=(
   "default"
   "serial"
-#  "slow"
+  "slow"
 )
 if [[ "${SUITES[*]}" =~ "${SUITE:-none}" ]]; then
   SUITES=("$SUITE")
@@ -33,18 +33,18 @@ elif [ "$SUITE" != "all" ]; then
   exit 1
 fi
 
-# Check that we're running in a kubernetes repository.
-if [ ! -f LICENSE -o "$(md5sum LICENSE)" != "d6177d11bbe618cf4ac8a63a16d30f83  LICENSE" ]; then
-  echo "It doesn't look like you're running in a kubernetes source repository."
-  exit 1
-fi
+# # Check that we're running in a kubernetes repository.
+# if [ ! -f LICENSE -o "$(md5sum LICENSE)" != "d6177d11bbe618cf4ac8a63a16d30f83  LICENSE" ]; then
+#   echo "It doesn't look like you're running in a kubernetes source repository."
+#   exit 1
+# fi
 
-# Check that the e2e cluster is up.
-if ! ISUP="$(go run hack/e2e.go -isup 2>&1)"; then
-  echo "e2e cluster not up!"
-  echo "$ISUP"
-  exit 1
-fi
+# # Check that the e2e cluster is up.
+# if ! ISUP="$(go run hack/e2e.go -isup 2>&1)"; then
+#   echo "e2e cluster not up!"
+#   echo "$ISUP"
+#   exit 1
+# fi
 
 OUTPUT_BASE="$HOME/logs/k8s-e2e"
 DATE_STR="$(date +%y.%m.%d.%H%M)"
