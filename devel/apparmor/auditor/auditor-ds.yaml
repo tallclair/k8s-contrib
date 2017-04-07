@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: auditor
-        image: gcr.io/stclair-gcr-pub/docker-auditor
+        image: gcr.io/stclair-gcr-pub/docker-auditor:custom
         imagePullPolicy: Always
         args:
           - -proxy-logs
