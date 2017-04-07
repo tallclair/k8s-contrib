@@ -13,10 +13,13 @@ import (
 	"time"
 )
 
-const profile = `
+const (
+	profilePath    = "/profile"
+	profileNameVar = "%%PROFILE%%"
+	profile        = `
 #include <tunables/global>
 
-profile docker-default flags=(attach_disconnected,mediate_deleted) {
+profile ` + profileNameVar + ` flags=(attach_disconnected,mediate_deleted) {
 
   #include <abstractions/base>
 
@@ -55,6 +58,7 @@ profile docker-default flags=(attach_disconnected,mediate_deleted) {
   audit /** w,
 }
 `
+)
 
 const (
 	parser     = "apparmor_parser"
@@ -65,6 +69,8 @@ const (
 var (
 	proxyLogs = flag.Bool("proxy-logs", false,
 		"Whether to scrape the journal logs for audit events, and print to stdout")
+	profileName = flag.String("profile", "docker-default",
+		"Name of the profile to install")
 )
 
 func main() {
@@ -122,18 +128,13 @@ func checkJournalDependencies() {
 
 func loadAuditProfile() error {
 	// Write profile to a temporary location.
-	f, err := ioutil.TempFile("", "aa-audit-profile")
-	if err != nil {
-		return fmt.Errorf("Failed to create temporary profile file: %v", err)
+	data := []byte(strings.Replace(profile, profileNameVar, *profileName, 1))
+	if err := ioutil.WriteFile(profilePath, data, 0444); err != nil {
+		return fmt.Errorf("Failed to write profile file: %v", err)
 	}
-	defer os.Remove(f.Name())
-	if _, err := f.WriteString(profile); err != nil {
-		return fmt.Errorf("Failed to write temporary profile file: %v", err)
-	}
-	f.Close()
 
-	cmd := exec.Command(parser, "--verbose", "--replace", "--skip-cache", f.Name())
-	log.Printf("Loading profile: %s", profile)
+	cmd := exec.Command(parser, "--verbose", "--replace", "--skip-cache", profilePath)
+	log.Printf("Loading profile: %s", data)
 	stderr := &bytes.Buffer{}
 	cmd.Stderr = stderr
 	out, err := cmd.Output()
