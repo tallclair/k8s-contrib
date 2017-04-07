@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name:   pause
+spec:
+  containers:
+    - name:    pause
+      image: gcr.io/google_containers/pause
+      readinessProbe:
+        httpGet:
+          path: /api/v1/ping
+          port: 8444

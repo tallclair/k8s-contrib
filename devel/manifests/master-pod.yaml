@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name:   master-pod
+  annotations:
+    scheduler.alpha.kubernetes.io/tolerations: |
+      [
+        {
+          "key": "dedicated",
+          "operator": "Equal",
+          "value": "master",
+          "effect": "NoSchedule"
+        }
+      ]
+spec:
+  nodeName: 
+  containers:
+    - name:    busybox
+      image:   busybox

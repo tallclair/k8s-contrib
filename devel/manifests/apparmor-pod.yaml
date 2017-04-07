@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name:   apparmor
+  annotations:
+    container.apparmor.security.beta.kubernetes.io/pause: localhost/bad
+spec:
+  containers:
+    - name:    pause
+      image: gcr.io/google_containers/pause

@@ -1,0 +1,30 @@
+apiVersion: extensions/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: apparmor
+  annotations:
+    apparmor.security.beta.kubernetes.io/defaultProfileName: foo
+    apparmor.security.beta.kubernetes.io/allowedProfileNames: runtime/default
+spec:
+  # Permissive PSP
+  privileged: true
+  defaultAddCapabilities: null
+  requiredDropCapabilities: null
+  allowedCapabilities: null
+  volumes:
+    - '*'
+  hostNetwork: true
+  hostPorts:
+  -
+    min: 0
+    max: 65535
+  hostIPC: true
+  hostPID: true
+  runAsUser:
+    rule: RunAsAny
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  fsGroup:
+    rule: RunAsAny

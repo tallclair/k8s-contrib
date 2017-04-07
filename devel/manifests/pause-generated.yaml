@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  generateName:   pause
+spec:
+  containers:
+    - name:    pause
+      image: gcr.io/google_containers/pause
+      resources:
+        requests:
+          memory: "5m"
+          cpu: "0.1m"
+        limits:
+          memory: "5000000.005"
+          cpu: "0.1m"

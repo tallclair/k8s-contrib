@@ -7,3 +7,8 @@ spec:
     - name:    busybox
       image: busybox:latest
       args: [sh, -c, 'while true; do echo "hello there!"; sleep 10; done']
+      readinessProbe:
+        httpGet:
+          path: /foo
+          port: 1234
+          

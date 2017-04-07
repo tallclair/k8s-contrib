@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name:   busybox
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: busybox
+    spec:
+      containers:
+        - name:    busybox
+          image:   busybox
+          args: [sh, -c, 'sleep 1; exit 1']

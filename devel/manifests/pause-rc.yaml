@@ -3,18 +3,14 @@ kind: ReplicationController
 metadata:
   name:   pause
 spec:
-  replicas: 50
-  selector:
-    app: pause
+  replicas: 1
   template:
     metadata:
       labels:
         app: pause
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/pause: localhost/bad
     spec:
       containers:
         - name:    pause
           image: gcr.io/google_containers/pause
-          resources:
-            requests:
-              memory: "1k"
-              cpu: "1m"

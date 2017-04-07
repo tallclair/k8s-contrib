@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name:   ports
+spec:
+  containers:
+    - name:    nginx
+      image: nginx
+      volumeMounts:
+        - mountPath: /tmp
+          name: tmp
+  volumes:
+    - name: tmp
+      hostPath:
+        path: /tmp

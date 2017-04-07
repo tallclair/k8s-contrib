@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hello
+spec:
+  containers:
+  - name: hello
+    image: busybox
+    command: ["sh", "-c", "sleep 600"]
+    volumeMounts:
+      - name: bin
+        mountPath: /usr/local/bin
+  - name: nonvol
+    image: busybox
+    command: ["sh", "-c", "sleep 600"]
+  volumes:
+  - name: bin
+    configMap:
+      name: hello

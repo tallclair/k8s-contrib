@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name:   good
+spec:
+  containers:
+    - name:    busybox
+      image: busybox:latest
+      args: [sh, -c, 'while true; do echo "I am good!"; sleep 10; done']
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name:   bad
+spec:
+  containers:
+    - name:    busybox
+      image: busybox:latest
+      args: [sh, -c, 'while true; do echo "I am bad!"; sleep 10; done']
