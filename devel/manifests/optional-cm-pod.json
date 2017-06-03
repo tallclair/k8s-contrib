@@ -1,0 +1,30 @@
+{
+  "apiVersion": "v1",
+  "kind": "Pod",
+  "metadata": {
+    "name": "test-cm"
+  },
+  "spec": {
+    "containers": [
+      {
+        "name": "busybox",
+        "image": "busybox",
+        "volumeMounts": [
+          {
+            "name": "test",
+            "mountPath": "/test"
+          }
+        ]
+      }
+    ],
+    "volumes": [
+      {
+        "name": "test",
+        "configMap": {
+          "name": "test-cm",
+          "optional": "true"
+        }
+      }
+    ]
+  }
+}

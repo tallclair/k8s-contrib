@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name:   apparmor-stress
+spec:
+  replicas: 70
+  selector:
+    test: apparmor-stress
+  template:
+    metadata:
+      labels:
+        test: apparmor-stress
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/busybox: localhost/docker-default-audit
+    spec:
+      containers:
+        - name:    busybox
+          image: busybox:latest
+          args: [sh, -c, 'while true; do mkdir /randos; for i in $(seq 1 100); do touch "/randos/$(tr -cd 0-9a-z </dev/urandom | head -c 64)"; done; sleep 1; rm -rf /dates; done']
+          resources:
+            requests:
+              memory: "10M"
+              cpu: "1m"

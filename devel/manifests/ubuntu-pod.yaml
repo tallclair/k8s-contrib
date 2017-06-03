@@ -5,5 +5,5 @@ metadata:
 spec:
   containers:
     - name:    ubuntu
-      image: ubuntu:14.04
+      image: ubuntu:latest
       args: [bash, -c, 'for ((i = 0; ; i++)); do echo "$i: $(date)"; sleep 100; done']

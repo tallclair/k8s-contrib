@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name:   busybox
+  annotations:
+    container.apparmor.security.beta.kubernetes.io/busybox: localhost/docker-default-audit
+spec:
+  containers:
+    - name:    busybox
+      image: busybox:latest
+      args: [sh, -c, 'while true; do mkdir /dates; for i in $(seq 1 100); do touch "/dates/$(date +%Y%m%dT%H%M%S)"; done; sleep 1; rm -rf /dates; done']

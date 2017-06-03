@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name:   busybox
+  annotations:
+    container.apparmor.security.beta.kubernetes.io/busybox: localhost/e2e-apparmor-test-e2e-tests-apparmor-62fpw
+spec:
+  containers:
+    - name:    busybox
+      image: busybox:latest
+      args: [sh, -c, 'while true; do echo "hello there!"; sleep 10; done']
