@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name:   non-root-v3
+spec:
+  containers:
+    - name:    non-root
+      image: gcr.io/stclair-k8s-ext/non-root:v3
+      securityContext:
+        runAsNonRoot: true

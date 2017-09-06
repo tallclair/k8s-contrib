@@ -118,7 +118,7 @@ for SUITE in ${SUITES[@]}; do
 
   OUTPUT_FILE="${OUTPUT_DIR}/${SUITE}.log"
   if [ "$GINKGO_TEST_ARGS" != "" ]; then
-    CMD="go run hack/e2e.go -v --test --test_args='$GINKGO_TEST_ARGS'"
+    CMD="kubetest -v --test --test_args='$GINKGO_TEST_ARGS'"
     echo "$CMD" > "$OUTPUT_FILE"
     eval $CMD |& tee -a "$OUTPUT_FILE"
   fi
