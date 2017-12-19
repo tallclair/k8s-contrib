@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name:   busybox
+spec:
+  containers:
+    - name:    busybox
+      image: busybox:latest
+      args: [sh, -c, 'echo $UID && sleep 600']
+      securityContext:
+        runAsUser: 65534

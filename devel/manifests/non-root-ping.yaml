@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name:   non-root
+spec:
+  containers:
+    - name: non-root
+      image: gcr.io/google_containers/nonewprivs:1.2
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
