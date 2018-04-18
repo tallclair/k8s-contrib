@@ -16,6 +16,20 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+/*
+
+Sample queries:
+
+# load db:
+sqlite3 <path to db>
+
+SELECT SUM(count),user,verb,namespace,apigroup,resource FROM audit GROUP BY user,verb,namespace,apigroup,resource ORDER BY count DESC LIMIT 20;
+
+# Get the top request users, with nodes aggregated (just clipping the node-specific call)
+SELECT SUM(count) AS total, SUBSTR(user,0,44) as usr FROM audit GROUP BY usr ORDER BY total DESC LIMIT 50;
+
+*/
+
 var (
 	logFile = flag.String("logs", "", "Path to audit logs")
 	dbFile  = flag.String("db", "", "Path to write DB to")
