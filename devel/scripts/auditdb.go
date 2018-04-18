@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"database/sql"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io"
@@ -10,13 +11,15 @@ import (
 	"os"
 	"strings"
 
-	"github.com/golang/glog"
+	auditapi "k8s.io/apiserver/pkg/apis/audit/v1beta1"
+
 	_ "github.com/mattn/go-sqlite3"
 )
 
 var (
 	logFile = flag.String("logs", "", "Path to audit logs")
 	dbFile  = flag.String("db", "", "Path to write DB to")
+	logType = flag.String("log-type", "json", "Log file format (json or legacy)")
 )
 
 const (
@@ -52,36 +55,35 @@ response VARCHAR(16)
 `
 
 func main() {
-	flag.Set("logtostderr", "true")
 	flag.Parse()
 
 	if *logFile == "" {
-		glog.Fatalf("required --log-file not specified")
+		log.Fatalf("required --log-file not specified")
 	}
 	if *dbFile == "" {
-		glog.Fatalf("required --db not specified")
+		log.Fatalf("required --db not specified")
 	}
 
 	logReader, err := os.Open(*logFile)
 	if err != nil {
-		glog.Fatalf("Failed to read logs: %v", err)
+		log.Fatalf("Failed to read logs: %v", err)
 	}
 	defer logReader.Close()
 
 	summary, err := summarize(logReader)
 	if err != nil {
-		glog.Fatalf("Failed to read logs: %v", err)
+		log.Fatalf("Failed to read logs: %v", err)
 	}
 
 	db, err := sql.Open("sqlite3", *dbFile)
 	if err != nil {
-		glog.Fatalf("Failed to open db: %v", err)
+		log.Fatalf("Failed to open db: %v", err)
 	}
 	defer db.Close()
 
 	tx, err := db.Begin()
 	if err != nil {
-		glog.Fatal(err)
+		log.Fatal(err)
 	}
 
 	// Setup pragmas.
@@ -93,7 +95,7 @@ func main() {
 	}
 	for pragma, val := range pragmas {
 		if _, err := db.Exec(fmt.Sprintf("PRAGMA %s=%s", pragma, val)); err != nil {
-			glog.Fatalf("PRAGMA Error: %v", err)
+			log.Fatalf("PRAGMA Error: %v", err)
 		}
 	}
 
@@ -101,25 +103,25 @@ func main() {
 	query := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (%s)", Table, schema)
 	_, err = db.Exec(query)
 	if err != nil {
-		glog.Fatalf("CREATE TABLE Error: %v\n%s", err, query)
+		log.Fatalf("CREATE TABLE Error: %v\n%s", err, query)
 	}
 
 	insert, err := db.Prepare("INSERT INTO audit (" +
 		"count, ip, user, verb, namespace, apigroup, resource, subresource, name, uri, response" +
 		") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
-		glog.Fatalf("PREPARE Error: %v\n", err)
+		log.Fatalf("PREPARE Error: %v\n", err)
 	}
 	for ev, count := range summary {
 		_, err := insert.Exec(count, ev.IP, ev.User, ev.Verb, ev.Namespace, ev.Group, ev.Resource,
 			ev.Subresource, ev.Name, ev.URI, ev.Response)
 		if err != nil {
-			glog.Fatalf("INSERT Error: %v\n", err)
+			log.Fatalf("INSERT Error: %v\n", err)
 		}
 	}
 
 	if err := tx.Commit(); err != nil {
-		glog.Fatal(err)
+		log.Fatal(err)
 	}
 }
 
@@ -153,6 +155,41 @@ func summarize(logs io.Reader) (map[event]int, error) {
 }
 
 func parseAuditLine(line string) (*event, error) {
+	switch *logType {
+	case "json":
+		return parseJsonAuditLine(line)
+	case "legacy":
+		return parseLegacyAuditLine(line)
+	default:
+		return nil, fmt.Errorf("invalid log type: %s", *logType)
+	}
+}
+
+func parseJsonAuditLine(line string) (*event, error) {
+	var evt auditapi.Event
+	if err := json.Unmarshal([]byte(line), &evt); err != nil {
+		return nil, err
+	}
+
+	sum := &event{
+		User: evt.User.Username,
+		Verb: evt.Verb,
+		URI:  evt.RequestURI,
+	}
+	if obj := evt.ObjectRef; obj != nil {
+		sum.Group = obj.APIGroup
+		sum.Resource = obj.Resource
+		sum.Subresource = obj.Subresource
+		sum.Name = obj.Name
+		sum.Namespace = obj.Namespace
+	}
+	if len(evt.SourceIPs) > 0 {
+		sum.IP = evt.SourceIPs[len(evt.SourceIPs)-1]
+	}
+	return sum, nil
+}
+
+func parseLegacyAuditLine(line string) (*event, error) {
 	fields := strings.Fields(line)
 	if len(fields) < 3 {
 		return nil, fmt.Errorf("could not parse audit line: %s", line)

@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"encoding/gob"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io"
@@ -11,11 +12,14 @@ import (
 	"sort"
 	"strings"
 	"text/tabwriter"
+
+	auditapi "k8s.io/apiserver/pkg/apis/audit/v1beta1"
 )
 
 var (
 	policyFile   = flag.String("policy-file", "", "Path to policy file to apply")
 	logFile      = flag.String("log-file", "", "Path to audit logs")
+	logType      = flag.String("log-type", "json", "Log file format (json or legacy)")
 	reportLength = flag.Int("n", 0, "Number of lines to include in the report")
 	cacheFile    = flag.String("cache-file", "", "Path to summary cache. "+
 		"If a logFile is included, the cache is written. Otherwise, it is read.")
@@ -215,6 +219,38 @@ func summarize(logs io.Reader) (map[summary]int, error) {
 }
 
 func parseAuditLine(line string) (*summary, error) {
+	switch *logType {
+	case "json":
+		return parseJsonAuditLine(line)
+	case "legacy":
+		return parseLegacyAuditLine(line)
+	default:
+		return nil, fmt.Errorf("invalid log type: %s", *logType)
+	}
+}
+
+func parseJsonAuditLine(line string) (*summary, error) {
+	var event auditapi.Event
+	if err := json.Unmarshal([]byte(line), &event); err != nil {
+		return nil, err
+	}
+
+	sum := &summary{
+		User: event.User.Username,
+		Verb: event.Verb,
+		URI:  event.RequestURI,
+	}
+	if obj := event.ObjectRef; obj != nil {
+		sum.Group = obj.APIGroup
+		sum.Resource = obj.Resource
+		sum.Subresource = obj.Subresource
+		sum.Name = obj.Name
+		sum.Namespace = obj.Namespace
+	}
+	return sum, nil
+}
+
+func parseLegacyAuditLine(line string) (*summary, error) {
 	fields := strings.Fields(line)
 	if len(fields) < 3 {
 		return nil, fmt.Errorf("could not parse audit line: %s", line)
