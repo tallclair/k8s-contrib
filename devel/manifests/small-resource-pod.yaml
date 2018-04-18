@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name:   small
+  namespace: default
+spec:
+  containers:
+    - name:    pause
+      image: gcr.io/google_containers/pause
+      resources:
+        requests:
+          cpu: "1m"
+          memory: "6Mi"
+        limits:
+          cpu: "1m"
+          memory: "6Mi"

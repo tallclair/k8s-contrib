@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name:   nested-mounts
+spec:
+  initContainers:
+    - name: prep-symlink
+      image: busybox
+      command: ['ln', '-s', '../../../../../../../../tmp/bar', '/base/foo']
+      volumeMounts:
+        - name: base
+          mountPath: /base/
+  containers:
+    - name: rooter
+      image: busybox
+      command: ['sh', '-c', 'if [ -e /tmp/bar ]; then exit 1; else sleep 99999; fi']
+      volumeMounts:
+        - name: base
+          mountPath: /base/
+        - name: nested
+          mountPath: /base/foo/bar
+  volumes:
+    - name: base
+      emptyDir: {}
+    - name: nested
+      emptyDir: {}

@@ -1,0 +1,9 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: kubectl
+spec:
+  containers:
+    - name: kubectl
+      image: gcr.io/stclair-gcr-pub/kubectl:1.8.5
+      command: ['sh', '-c', 'while true; do sleep 100000; done']

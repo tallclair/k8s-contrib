@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name:   subpath
+spec:
+  initContainers:
+    - name: symlink
+      image:  busybox
+      command: ['ln', '-s', '/var/run', '/tmp/host-var-run']
+      volumeMounts:
+        - name: empty
+          mountPath: /tmp/
+  containers:
+    - name:    busybox
+      image: busybox
+      args: [sh, -c, 'while true; do sleep 100000; done']
+      volumeMounts:
+        - name: empty
+          subPath: host-var-run
+          mountPath: /tmp/
+  volumes:
+    - name: empty
+      emptyDir: {}

@@ -8,8 +8,6 @@ spec:
     metadata:
       labels:
         app: pause
-      annotations:
-        container.apparmor.security.beta.kubernetes.io/pause: localhost/bad
     spec:
       containers:
         - name:    pause

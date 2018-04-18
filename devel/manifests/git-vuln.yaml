@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name:   git-vuln-7
+  name:   git-vuln
 spec:
   containers:
     - name: git-vuln

@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name:   unconfined
+  annotations:
+#    container.apparmor.security.beta.kubernetes.io/busybox: unconfined
+    container.apparmor.security.beta.kubernetes.io/busybox-init: unconfined
+spec:
+  initContainers:
+    - name:    busybox-init
+      image: busybox:latest
+      args: [sh, -c, 'while true; do echo "hello there!"; sleep 10; done']
+      securityContext:
+        runAsUser: 65534
+  containers:
+    - name:    busybox
+      image: busybox:latest
+      args: [sh, -c, 'while true; do echo "hello there!"; sleep 10; done']
+      securityContext:
+        runAsUser: 65534

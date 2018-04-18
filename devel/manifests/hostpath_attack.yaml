@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name:   busybox2
+spec:
+  restartPolicy: OnFailure
+  containers:
+    - name:    busybox
+      image: busybox:latest
+      # args: ['ln', '-s', '/var/run', '/tmp/foo']
+      args: ['sh', '-c', 'while true; do sleep 100; done']
+      volumeMounts:
+        - name: foo
+          # mountPath: /tmp
+          mountPath: /var/run
+  volumes:
+    - name: foo
+      hostPath:
+        # path: '/tmp/'
+        path: '/tmp/foo'
