@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name:   bad-hostpath
+spec:
+  containers:
+    - name:  pause
+      image: gcr.io/google-containers/pause
+      volumeMounts:
+        - name: hostpath
+          mountPath: /foo
+  volumes:
+    - name: hostpath
+      hostPath:
+        path: "-exec touch /tmp/foo"
+    - name: nested
+      emptyDir: {}
