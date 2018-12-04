@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name:   git-repo
+spec:
+  containers:
+    - name: git
+      image: alpine:3.5
+      volumeMounts:
+        - name: git
+          mountPath: /repo
+      args:
+        - sleep
+        - "100000"
+  volumes:
+    - name: git
+      gitRepo:
+        repository: https://github.com/tallclair/tconf.git
+        directory: ".tconf"
+        revision: bd3789805c53c4c98be433afc76c0b173aa1ba64

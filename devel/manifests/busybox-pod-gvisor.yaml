@@ -1,8 +1,9 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  uid: 0f4e723b-ce88-11e8-869d-420123456789
   name:   busybox
+  annotations:
+    runtime-handler.cri.kubernetes.io: gvisor
 spec:
   containers:
     - name:    busybox

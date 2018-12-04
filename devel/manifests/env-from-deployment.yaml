@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: secret-env
+  labels:
+    secret: env
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      secret: env
+  template:
+    metadata:
+      labels:
+        secret: env
+    spec:
+      containers:
+      - name: alpine
+        image: alpine:latest
+        # args: [sh, -c, 'while true; do sleep 100000; done']
+        # envFrom:
+        #   - secretRef:
+        #       name: foo
+        env:
+          - name: TOP_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: foo
+                key: top-secret

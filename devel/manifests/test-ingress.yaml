@@ -1,0 +1,9 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: test
+  namespace: kube-system
+spec:
+  backend:
+    serviceName: default-http-backend
+    servicePort: 80

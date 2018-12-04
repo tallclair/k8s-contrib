@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: pause
+spec:
+  template:
+    metadata:
+      labels:
+        app: pause
+    spec:
+      initContainers:
+        - name: wait
+          image: busybox
+          command: ['sleep', '20']
+      containers:
+        - name:    pause
+          image: gcr.io/google_containers/pause

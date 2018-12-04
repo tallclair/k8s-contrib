@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name:   selinux
+spec:
+  containers:
+    - name:    busybox
+      image: busybox:latest
+      args: [sh, -c, 'while true; do sleep 1000000; done']
+      securityContext:
+        seLinuxOptions:
+          user: bob
+          role: dude
+          type: man
+          level: '73'

@@ -1,13 +1,12 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name:   non-root-v1
+  name:   scratcher
 spec:
   containers:
-    - name:    non-root
-      image: gcr.io/stclair-gcr-pub/busybox-nonroot:dev
-      # securityContext:
-      #   runAsNonRoot: true
+    - name:    scratcher
+      image: gcr.io/stclair-gcr-pub/scratcher:{{TAG}}
+      imagePullPolicy: Always
       volumeMounts:
         - name: empty
           mountPath: /empty

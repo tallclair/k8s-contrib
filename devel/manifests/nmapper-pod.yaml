@@ -1,0 +1,15 @@
+# List addresses:
+#  kubectl get nodes -o jsonpath="{range.items[*]}{@.status.addresses[*].address} {@.spec.podCIDR} {end}"
+#  nmap
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name:   nmapper
+spec:
+  containers:
+    - name:  alpine
+      image: alpine:latest
+      args: [sh, -c, 'while true; do sleep 100000; done']
+      securityContext:
+        privileged: true

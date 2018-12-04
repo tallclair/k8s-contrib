@@ -1,8 +1,12 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name:      pause
+  name:   test-default-backend
+  labels:
+    test: default-backend
 spec:
   containers:
     - name:    pause
       image: gcr.io/google_containers/pause
+      ports:
+        - containerPort: 8080
