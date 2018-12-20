@@ -1,0 +1,230 @@
+ClusterRole admin is escalating:
+    create/delete/deletecollection/read/update pods/attach
+    create/delete/deletecollection/read/update pods/exec
+    create/update apps/statefulsets
+    create/update extensions/replicasets
+    create/update rbac.authorization.k8s.io/roles
+    create/delete/deletecollection/read/update pods/portforward
+    create/delete/deletecollection/read/update services/proxy
+    create/update apps/deployments
+    create/update batch/jobs
+    create/update rbac.authorization.k8s.io/rolebindings
+    create/update pods
+    create/delete/deletecollection/read/update pods/proxy
+    create/delete/deletecollection/read/update configmaps
+    create/update replicationcontrollers
+    create/delete/deletecollection/read/update secrets
+    create/update apps/daemonsets
+    create/update apps/replicasets
+    create/update extensions/daemonsets
+    create/update extensions/deployments
+ClusterRole calico is escalating:
+    update pods
+ClusterRole calico-cpva is escalating:
+    update apps/deployments
+    update apps/daemonsets
+    update extensions/deployments
+    update extensions/daemonsets
+ClusterRole cluster-autoscaler is escalating:
+    create/delete/read/update configmaps
+ClusterRole edit is escalating:
+    create/update pods
+    create/delete/deletecollection/read/update pods/exec
+    create/delete/deletecollection/read/update secrets
+    create/update apps/statefulsets
+    create/delete/deletecollection/read/update configmaps
+    create/update extensions/replicasets
+    create/update replicationcontrollers
+    create/update apps/daemonsets
+    create/update batch/jobs
+    create/update extensions/daemonsets
+    create/update extensions/deployments
+    create/update apps/replicasets
+    create/delete/deletecollection/read/update pods/attach
+    create/delete/deletecollection/read/update pods/portforward
+    create/delete/deletecollection/read/update pods/proxy
+    create/delete/deletecollection/read/update services/proxy
+    create/update apps/deployments
+ClusterRole kubelet-api-admin is escalating:
+    * nodes/proxy
+ClusterRole system:aggregate-to-admin is escalating:
+    create/update replicationcontrollers
+    create/update apps/daemonsets
+    create/update batch/jobs
+    create/update extensions/daemonsets
+    create/update rbac.authorization.k8s.io/rolebindings
+    create/update pods
+    create/delete/deletecollection/read/update pods/attach
+    create/delete/deletecollection/read/update configmaps
+    create/update apps/statefulsets
+    create/delete/deletecollection/read/update pods/proxy
+    create/delete/deletecollection/read/update secrets
+    create/delete/deletecollection/read/update services/proxy
+    create/delete/deletecollection/read/update pods/exec
+    create/delete/deletecollection/read/update pods/portforward
+    create/update rbac.authorization.k8s.io/roles
+    create/update extensions/replicasets
+    create/update apps/deployments
+    create/update apps/replicasets
+    create/update extensions/deployments
+ClusterRole system:aggregate-to-edit is escalating:
+    create/update replicationcontrollers
+    create/update apps/replicasets
+    create/update extensions/daemonsets
+    create/update extensions/deployments
+    create/delete/deletecollection/read/update pods/portforward
+    create/delete/deletecollection/read/update pods/proxy
+    create/delete/deletecollection/read/update secrets
+    create/delete/deletecollection/read/update services/proxy
+    create/update apps/deployments
+    create/update pods
+    create/delete/deletecollection/read/update pods/attach
+    create/update apps/daemonsets
+    create/update apps/statefulsets
+    create/update batch/jobs
+    create/delete/deletecollection/read/update pods/exec
+    create/delete/deletecollection/read/update configmaps
+    create/update extensions/replicasets
+ClusterRole system:aggregate-to-view is escalating:
+    read configmaps
+ClusterRole system:controller:cronjob-controller is escalating:
+    create/update batch/jobs
+ClusterRole system:controller:daemon-set-controller is escalating:
+    create/update pods
+ClusterRole system:controller:deployment-controller is escalating:
+    update apps/deployments
+    update extensions/deployments
+    create/update apps/replicasets
+    create/update extensions/replicasets
+    update pods
+ClusterRole system:controller:expand-controller is escalating:
+    read secrets
+ClusterRole system:controller:horizontal-pod-autoscaler is escalating:
+    read services/proxy
+ClusterRole system:controller:job-controller is escalating:
+    update batch/jobs
+    create/update pods
+ClusterRole system:controller:persistent-volume-binder is escalating:
+    read secrets
+    create pods
+ClusterRole system:controller:replicaset-controller is escalating:
+    update apps/replicasets
+    update extensions/replicasets
+    create/update pods
+ClusterRole system:controller:replication-controller is escalating:
+    update replicationcontrollers
+    create/update pods
+ClusterRole system:controller:statefulset-controller is escalating:
+    create/update pods
+ClusterRole system:kube-controller-manager is escalating:
+    create/delete/read/update secrets
+ClusterRole system:kube-dns-autoscaler is escalating:
+    create/read configmaps
+ClusterRole system:kubelet-api-admin is escalating:
+    * nodes/proxy
+ClusterRole system:metrics-server is escalating:
+    update extensions/deployments
+ClusterRole system:node is escalating:
+    read secrets
+    create pods
+    read configmaps
+ClusterRole typha-cpva is escalating:
+    update apps/deployments
+    update extensions/deployments
+ClusterRole view is escalating:
+    read configmaps
+System Role kube-system/cloud-provider is escalating:
+    create/read/update configmaps
+System Role kube-system/extension-apiserver-authentication-reader is escalating:
+    read configmaps
+System Role kube-system/gce:cloud-provider is escalating:
+    create/read/update configmaps
+System Role kube-system/system::leader-locking-kube-controller-manager is escalating:
+    read/update configmaps
+System Role kube-system/system::leader-locking-kube-scheduler is escalating:
+    read/update configmaps
+System Role kube-system/system:controller:bootstrap-signer is escalating:
+    read secrets
+System Role kube-system/system:controller:cloud-provider is escalating:
+    create/read configmaps
+System Role kube-system/system:controller:token-cleaner is escalating:
+    delete/read secrets
+System Role kube-system/system:fluentd-gcp-scaler is escalating:
+    update extensions/daemonsets
+System Role kube-system/system:pod-nanny is escalating:
+    update extensions/deployments
+System Role kube-system/typha-cpha is escalating:
+    read configmaps
+
+ClusterRoleBinding calico is escalating:
+    kube-system/calico
+ClusterRoleBinding calico-cpva is escalating:
+    kube-system/calico-cpva
+ClusterRoleBinding calico-sa is escalating:
+    kube-system/calico-sa
+ClusterRoleBinding cluster-autoscaler is escalating:
+ClusterRoleBinding event-exporter-rb is escalating:
+    kube-system/event-exporter-sa
+ClusterRoleBinding kube-apiserver-kubelet-api-admin is escalating:
+ClusterRoleBinding kubelet-cluster-admin is escalating:
+ClusterRoleBinding system:controller:cronjob-controller is escalating:
+    kube-system/cronjob-controller
+ClusterRoleBinding system:controller:daemon-set-controller is escalating:
+    kube-system/daemon-set-controller
+ClusterRoleBinding system:controller:deployment-controller is escalating:
+    kube-system/deployment-controller
+ClusterRoleBinding system:controller:expand-controller is escalating:
+    kube-system/expand-controller
+ClusterRoleBinding system:controller:horizontal-pod-autoscaler is escalating:
+    kube-system/horizontal-pod-autoscaler
+ClusterRoleBinding system:controller:job-controller is escalating:
+    kube-system/job-controller
+ClusterRoleBinding system:controller:persistent-volume-binder is escalating:
+    kube-system/persistent-volume-binder
+ClusterRoleBinding system:controller:replicaset-controller is escalating:
+    kube-system/replicaset-controller
+ClusterRoleBinding system:controller:replication-controller is escalating:
+    kube-system/replication-controller
+ClusterRoleBinding system:controller:statefulset-controller is escalating:
+    kube-system/statefulset-controller
+ClusterRoleBinding system:kube-controller-manager is escalating:
+ClusterRoleBinding system:kube-dns-autoscaler is escalating:
+    kube-system/kube-dns-autoscaler
+ClusterRoleBinding system:metrics-server is escalating:
+    kube-system/metrics-server
+ClusterRoleBinding system:node is escalating:
+ClusterRoleBinding typha-cpva is escalating:
+    kube-system/typha-cpva
+RoleBinding kube-system/fluentd-gcp-scaler-binding is escalating:
+    kube-system/fluentd-gcp-scaler
+RoleBinding kube-system/gce:cloud-provider is escalating:
+    kube-system/cloud-provider
+RoleBinding kube-system/heapster-binding is escalating:
+    kube-system/heapster
+RoleBinding kube-system/metrics-server-auth-reader is escalating:
+    kube-system/metrics-server
+RoleBinding kube-system/system::leader-locking-kube-controller-manager is escalating:
+    kube-system/kube-controller-manager
+RoleBinding kube-system/system::leader-locking-kube-scheduler is escalating:
+    kube-system/kube-scheduler
+RoleBinding kube-system/system:controller:bootstrap-signer is escalating:
+    kube-system/bootstrap-signer
+RoleBinding kube-system/system:controller:cloud-provider is escalating:
+    kube-system/cloud-provider
+RoleBinding kube-system/system:controller:token-cleaner is escalating:
+    kube-system/token-cleaner
+RoleBinding kube-system/typha-cpha is escalating:
+    kube-system/typha-cpha
+
+Pod kube-system/calico-node-7r9xs (calico-sa) has escalating permissions
+Pod kube-system/calico-node-g9p6d (calico-sa) has escalating permissions
+Pod kube-system/calico-node-vertical-autoscaler-547d98499d-btjsj (calico-cpva) has escalating permissions
+Pod kube-system/calico-node-wzm76 (calico-sa) has escalating permissions
+Pod kube-system/calico-typha-5b857668fd-m4lpk (calico-sa) has escalating permissions
+Pod kube-system/calico-typha-horizontal-autoscaler-5ff7f558cc-k248t (typha-cpha) has escalating permissions
+Pod kube-system/calico-typha-vertical-autoscaler-5d4bf57df5-xgh8l (calico-cpva) has escalating permissions
+Pod kube-system/event-exporter-v0.2.3-85644fcdf-btkhd (event-exporter-sa) has escalating permissions
+Pod kube-system/fluentd-gcp-scaler-697b966945-m8pgj (fluentd-gcp-scaler) has escalating permissions
+Pod kube-system/heapster-v1.6.0-beta.1-5cb74d87c8-b4pxl (heapster) has escalating permissions
+Pod kube-system/kube-dns-autoscaler-67c97c87fb-k4knh (kube-dns-autoscaler) has escalating permissions
+Pod kube-system/metrics-server-v0.2.1-fd596d746-nprbr (metrics-server) has escalating permissions
