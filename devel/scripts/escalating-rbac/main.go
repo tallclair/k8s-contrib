@@ -159,7 +159,7 @@ func addEscalations(escalations map[string]sets.String, rule rbacv1.PolicyRule) 
 	escalatingVerbs := sets.NewString("create", "update", "proxy")
 	for _, res := range qualifiedResources {
 		switch res {
-		case "secrets", "configmaps":
+		case "secrets":
 			escalations[res] = escalations[res].Union(verbs)
 		case "apps/daemonsets",
 			"extensions/daemonsets",
@@ -176,6 +176,7 @@ func addEscalations(escalations map[string]sets.String, rule rbacv1.PolicyRule) 
 			"rbac.authorization.k8s.io/roles",
 			"rbac.authorization.k8s.io/rolebindings",
 			"pods",
+			"configmaps",
 			"replicationcontrollers":
 			if esc := verbs.Intersection(escalatingVerbs); len(esc) > 0 {
 				escalations[res] = escalations[res].Union(esc)
