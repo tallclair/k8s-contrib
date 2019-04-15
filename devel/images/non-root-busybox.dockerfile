@@ -1,5 +1,3 @@
-FROM busybox
+FROM busybox@sha256:061ca9704a714ee3e8b80523ec720c64f6209ad3f97c0ff7cb9ec7d19f15149f
 
 USER 100:100
-
-ENTRYPOINT ["sleep", "60000"]

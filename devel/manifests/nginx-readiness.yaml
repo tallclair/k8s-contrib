@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name:   nginx-readiness
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: nginx-readiness
+  template:
+    metadata:
+      labels:
+        app: nginx-readiness
+      annotations:
+        seccomp.security.alpha.kubernetes.io/pod: docker/default
+    spec:
+      containers:
+      - name:    nginx
+        image:   gcr.io/stclair-k8s-ext/nginx-wget:latest
+        readinessProbe:
+          exec:
+            command:
+              - wget
+              - --no-check-certificate
+              - --spider
+              - -q
+              - http://localhost:80
+          periodSeconds: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi

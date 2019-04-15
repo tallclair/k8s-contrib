@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: http-dump
+  labels:
+    app: http-dump
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: http-dump
+  template:
+    metadata:
+      labels:
+        app: http-dump
+    spec:
+      containers:
+      - name: http-dump
+        image: gcr.io/stclair-gcr-pub/http-dump:{{TAG}}
+        ports:
+        - containerPort: 8080
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: http-dump
+spec:
+  selector:
+    app: http-dump
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+  type: LoadBalancer

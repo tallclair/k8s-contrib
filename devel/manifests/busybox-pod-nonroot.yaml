@@ -3,9 +3,10 @@ kind: Pod
 metadata:
   name:   busybox
 spec:
+  securityContext:
+    runAsNonRoot: true
   containers:
     - name:    busybox
-      image: busybox:latest
-      args: [sh, -c, 'echo $UID && sleep 600']
-      securityContext:
-        runAsUser: 65534
+      image: gcr.io/stclair-k8s-ext/busybox-nonroot:latest
+      imagePullPolicy: "Always"
+      args: [sh, -c, 'echo $UID; if [[ $UID == 0 ]]; then echo "rooted"; sleep 60000; fi']

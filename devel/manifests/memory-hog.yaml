@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name:   memory-hog
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: memory-hog
+  template:
+    metadata:
+      labels:
+        app: memory-hog
+      annotations:
+        seccomp.security.alpha.kubernetes.io/pod: docker/default
+    spec:
+      containers:
+      - name:    hog
+        image:   k8s.gcr.io/stress:v1
+        args: ["-mem-alloc-size", "10Mi", "-mem-alloc-sleep", "10s", "-mem-total", "100Mi"]
+        env:
+          - name: "MEMORY_LIMIT"
+            value: "100Mi"
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi

@@ -1,0 +1,161 @@
+diff --git a/devel/images/http-dump/Dockerfile b/devel/images/http-dump/Dockerfile
+new file mode 100644
+index 00000000..5807901e
+--- /dev/null
++++ b/devel/images/http-dump/Dockerfile
+@@ -0,0 +1,5 @@
++FROM alpine
++
++COPY http-dump /http-dump
++
++ENTRYPOINT ["/http-dump"]
+diff --git a/devel/images/http-dump/Makefile b/devel/images/http-dump/Makefile
+new file mode 100644
+index 00000000..2b95c30e
+--- /dev/null
++++ b/devel/images/http-dump/Makefile
+@@ -0,0 +1,13 @@
++TAG=dev
++
++build:
++	CGO_ENABLED=0 go build -a -ldflags '-w'  -o http-dump main.go
++	docker build -t gcr.io/stclair-gcr-pub/http-dump:$(TAG) .
++	docker push gcr.io/stclair-gcr-pub/http-dump:$(TAG)
++
++deploy:
++	cat http-dump.yaml | sed "s/{{TAG}}/$(TAG)/" | kubectl apply -f-
++
++redeploy:
++	kubectl delete -f http-dump.yaml
++	make deploy
+diff --git a/devel/images/http-dump/http-dump b/devel/images/http-dump/http-dump
+new file mode 100755
+index 00000000..43ffccb8
+Binary files /dev/null and b/devel/images/http-dump/http-dump differ
+diff --git a/devel/images/http-dump/http-dump.yaml b/devel/images/http-dump/http-dump.yaml
+new file mode 100644
+index 00000000..99bd1cf7
+--- /dev/null
++++ b/devel/images/http-dump/http-dump.yaml
+@@ -0,0 +1,34 @@
++apiVersion: apps/v1
++kind: Deployment
++metadata:
++  name: http-dump
++  labels:
++    app: http-dump
++spec:
++  replicas: 1
++  selector:
++    matchLabels:
++      app: http-dump
++  template:
++    metadata:
++      labels:
++        app: http-dump
++    spec:
++      containers:
++      - name: http-dump
++        image: gcr.io/stclair-gcr-pub/http-dump:{{TAG}}
++        ports:
++        - containerPort: 8080
++---
++kind: Service
++apiVersion: v1
++metadata:
++  name: http-dump
++spec:
++  selector:
++    app: http-dump
++  ports:
++  - protocol: TCP
++    port: 80
++    targetPort: 8080
++  type: LoadBalancer
+diff --git a/devel/images/http-dump/main.go b/devel/images/http-dump/main.go
+new file mode 100644
+index 00000000..ca7aac68
+--- /dev/null
++++ b/devel/images/http-dump/main.go
+@@ -0,0 +1,26 @@
++package main
++
++import (
++	"flag"
++	"net"
++	"net/http"
++
++	"github.com/davecgh/go-spew/spew"
++)
++
++var (
++	port = flag.String("port", "8080", "port to listen on")
++)
++
++func main() {
++	http.HandleFunc("/", dump)
++	http.ListenAndServe(net.JoinHostPort("", *port), nil)
++}
++
++func dump(w http.ResponseWriter, r *http.Request) {
++	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
++	w.Header().Set("X-Content-Type-Options", "nosniff")
++	w.WriteHeader(200)
++
++	spew.Fdump(w, r)
++}
+diff --git a/devel/scripts/http-client.go b/devel/scripts/http-client.go
+new file mode 100644
+index 00000000..67e2eb6d
+--- /dev/null
++++ b/devel/scripts/http-client.go
+@@ -0,0 +1,49 @@
++package main
++
++import (
++	"crypto/tls"
++	"flag"
++	"fmt"
++	"io/ioutil"
++	"log"
++	"net/http"
++	"os"
++)
++
++var (
++	token = flag.String("token", "", "Kubernetes access token")
++)
++
++func main() {
++	flag.Parse()
++	if *token == "" {
++		fmt.Printf("missing required token")
++		os.Exit(1)
++	}
++
++	url := "https://35.188.140.21/api/v1/namespaces/default/services/http-dump/proxy/?a=1 HTTP/1.1\r\nX-injected: foo-bar\r\n"
++
++	req, err := http.NewRequest("GET", url, nil)
++	if err != nil {
++		log.Fatalf("Error creating request: %v", err)
++	}
++	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", *token))
++
++	client := &http.Client{
++		Transport: &http.Transport{
++			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
++		},
++	}
++	resp, err := client.Do(req)
++	if err != nil {
++		log.Fatalf("Request error: %v", err)
++	}
++
++	body, err := ioutil.ReadAll(resp.Body)
++	resp.Body.Close()
++	if err != nil {
++		log.Fatalf("Error reading response body: %v", err)
++	}
++
++	fmt.Printf("Response Body:\n%s\n", body)
++}

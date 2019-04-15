@@ -19,11 +19,10 @@ import (
 
 func main() {
 	var kubeconfig *string
-	if home := homeDir(); home != "" {
-		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
-	} else {
-		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
-	}
+	home, err := os.UserHomeDir()
+	errPanic(err)
+
+	kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
 	flag.Parse()
 
 	// use the current context in kubeconfig
@@ -161,23 +160,25 @@ func addEscalations(escalations map[string]sets.String, rule rbacv1.PolicyRule) 
 		switch res {
 		case "secrets":
 			escalations[res] = escalations[res].Union(verbs)
-		case "apps/daemonsets",
-			"extensions/daemonsets",
+		case
+			"apps/daemonsets",
 			"apps/deployments",
-			"extensions/deployments",
 			"apps/replicasets",
-			"extensions/replicasets",
 			"apps/statefulsets",
-			"batch/jobs",
-			"serviceaccount",
 			"authentication.k8s.io/tokenrequests",
-			"rbac.authorization.k8s.io/clusterroles",
-			"rbac.authorization.k8s.io/clusterrolebindings",
-			"rbac.authorization.k8s.io/roles",
-			"rbac.authorization.k8s.io/rolebindings",
-			"pods",
+			"batch/jobs",
 			"configmaps",
-			"replicationcontrollers":
+			"extensions/daemonsets",
+			"extensions/deployments",
+			"extensions/replicasets",
+			"nodes",
+			"pods",
+			"rbac.authorization.k8s.io/clusterrolebindings",
+			"rbac.authorization.k8s.io/clusterroles",
+			"rbac.authorization.k8s.io/rolebindings",
+			"rbac.authorization.k8s.io/roles",
+			"replicationcontrollers",
+			"serviceaccount":
 			if esc := verbs.Intersection(escalatingVerbs); len(esc) > 0 {
 				escalations[res] = escalations[res].Union(esc)
 			}

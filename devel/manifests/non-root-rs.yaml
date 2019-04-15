@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name:   nonroot
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: nonroot
+  template:
+    metadata:
+      labels:
+        app: nonroot
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      containers:
+      - name:    busybox
+        image: gcr.io/stclair-k8s-ext/busybox-nonroot:latest
+        imagePullPolicy: "Always"
+        args: [sh, -c, 'UID=$(id -u); echo $UID; if [[ $UID == 0 ]]; then echo "rooted"; sleep 60000; fi']
